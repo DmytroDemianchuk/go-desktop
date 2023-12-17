@@ -1,44 +1,72 @@
 package main
 
 import (
-	"io"
+	"fmt"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+	"github.com/xuri/excelize/v2"
 )
 
 func main() {
-	a := app.New()
+	myApp := app.New()
 
-	w := a.NewWindow("App")
-	w.Resize(fyne.NewSize(800, 500))
+	// Create a window
+	myWindow := myApp.NewWindow("XLSX Reader")
 
-	entry := widget.NewMultiLineEntry()
-	entry.Resize(fyne.NewSize(600, 300))
-	entry.Move(fyne.NewPos(100, 135))
+	// Create a label to display the content
+	contentLabel := widget.NewLabel("Select an XLSX file to display its content")
 
-	btn := widget.NewButton("Open File", func() {
-		dialog.ShowFileOpen(
-			func(r fyne.URIReadCloser, err error) { // r - it's reader
+	// Create a button to open the file dialog
+	openButton := widget.NewButton("Open File", func() {
+		fileDialog := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			if reader == nil {
+				return
+			}
+			defer reader.Close()
 
-				// i have problem here
-				data, _ := io.ReadAll(r)
-				entry.SetText(string(data))
+			// Read the content of the selected XLSX file
+			f, err := excelize.OpenReader(reader)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
 
-			},
-			w,
-		)
+			// Get all the rows in the first sheet
+			rows, err := f.GetRows(f.GetSheetList()[0])
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
+			// Display the content in the label
+			var content string
+			for _, row := range rows {
+				content += fmt.Sprintf("%v\n", row)
+			}
+			contentLabel.SetText(content)
+		}, myWindow)
+
+		// Show the file dialog
+		fileDialog.Show()
 	})
 
-	btn.Resize(fyne.NewSize(150, 75))
-	btn.Move(fyne.NewPos(325, 30))
+	// Create a container to hold the widgets
+	content := container.NewVBox(
+		openButton,
+		contentLabel,
+	)
 
-	cont := container.NewWithoutLayout(btn, entry)
+	// Set the content of the window
+	myWindow.SetContent(content)
 
-	w.SetContent(cont)
-	w.Show()
-	a.Run()
+	// Show and run the application
+	myWindow.ShowAndRun()
 }
