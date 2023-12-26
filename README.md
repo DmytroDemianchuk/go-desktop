@@ -34,3 +34,7 @@ go mod tidy
 ```
 go run main.go
 ```
+
+### App look
+
+![image](../main/assets/desktop-image.png)
