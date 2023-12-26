@@ -37,4 +37,4 @@ go run main.go
 
 ### App look
 
-![image](../main/assets/desktop-image.png)
+![image](../main/assets/desktop_image.png)
