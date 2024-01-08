@@ -38,6 +38,7 @@ go run main.go
 ```
 
 ## Screenshots
-
+#### The main window in which we open files
 ![image](../main/assets/desktop_image.png)
+#### Windows with open files
 ![image](../main/assets/excelFiles_image.png)
