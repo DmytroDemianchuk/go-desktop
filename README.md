@@ -26,6 +26,7 @@ Overall, this code demonstrates a simple Fyne-based application to open XLSX fil
 ## Start
 
 Use `go mod tidy` and `go run main.go`
+
 to build&run project
 
 ```
@@ -39,4 +40,4 @@ go run main.go
 ## Screenshots
 
 ![image](../main/assets/desktop_image.png)
-![image](../main/assets/dexcelFiles_image.png)
+![image](../main/assets/excelFiles_image.png)
